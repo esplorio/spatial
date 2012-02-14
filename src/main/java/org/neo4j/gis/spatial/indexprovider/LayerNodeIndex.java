@@ -224,14 +224,17 @@ public class LayerNodeIndex implements Index<Node>
                 {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
+                    // Initialize point and distance, since it complains
+                    point = new Double[2];
+                    distance = 0.0;
                 }
             }
             
             else
             {
                 Map<?, ?> p = (Map<?, ?>) params;
-                Double[] point = (Double[]) p.get( POINT_PARAMETER );
-                Double distance = (Double) p.get( DISTANCE_IN_KM_PARAMETER );
+                point = (Double[]) p.get( POINT_PARAMETER );
+                distance = (Double) p.get( DISTANCE_IN_KM_PARAMETER );
             }
 
             List<SpatialDatabaseRecord> res = GeoPipeline.startNearestNeighborLatLonSearch(
