@@ -19,10 +19,9 @@
  */
 package org.neo4j.gis.spatial.indexprovider;
 
-import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Envelope;
-import com.vividsolutions.jts.geom.Geometry;
-import com.vividsolutions.jts.io.WKTReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.NotImplementedException;
 import org.json.simple.parser.JSONParser;
@@ -45,9 +44,10 @@ import org.neo4j.helpers.Predicate;
 import org.neo4j.helpers.collection.IteratorUtil;
 import org.neo4j.kernel.Traversal;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import com.vividsolutions.jts.geom.Coordinate;
+import com.vividsolutions.jts.geom.Envelope;
+import com.vividsolutions.jts.geom.Geometry;
+import com.vividsolutions.jts.io.WKTReader;
 
 public class LayerNodeIndex implements Index<Node>
 {
@@ -205,8 +205,8 @@ public class LayerNodeIndex implements Index<Node>
         
         else if ( key.equals( WITHIN_DISTANCE_QUERY ) )
         {
-            Double[] point;
-            Double distance;
+            Double[] point = null;
+            Double distance = null;
             
             // this one should enable distance searches using cypher query lang
             // by using: withinDistance:[7.0, 10.0, 100.0]  (long, lat. distance)

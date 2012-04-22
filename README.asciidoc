@@ -58,7 +58,7 @@ Spatial data is divided in Layers and indexed by a RTree.
 GraphDatabaseService database = new EmbeddedGraphDatabase(storeDir);
 	try {
 		ShapefileImporter importer = new ShapefileImporter(database);
-	    importer.importShapefile("roads.shp", "layer_roads");
+	    importer.importFile("roads.shp", "layer_roads");
 	} finally {
 		database.shutdown();
 	}
@@ -112,7 +112,7 @@ mvn clean install
 
 === Deployment into Geoserver ===
 
-* unzip the +target/xxxx-server-plugin.zip+ into $GEOSERVER_HOME/webapps/geoserver/WEB-INF/lib
+* unzip the +target/xxxx-server-plugin.zip+ and the Neo4j libraries from your Neo4j download under +NEO4J_HOME/lib+ into $GEOSERVER_HOME/webapps/geoserver/WEB-INF/lib
 
 * restart geoserver
 
