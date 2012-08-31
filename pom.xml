@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <properties>
-    <neo4j.version>1.6</neo4j.version>
-    <neo4j.graphcollections.version>0.2</neo4j.graphcollections.version>
-    <geotools.version>8.0-M4</geotools.version>
+    <neo4j.version>1.8.M07</neo4j.version>
+    <neo4j.graphcollections.version>0.4.M01</neo4j.graphcollections.version>
+    <geotools.version>8.0</geotools.version>
     <spatial.test.osm.version>20100819</spatial.test.osm.version>
     <spatial.test.shp.version>20100819</spatial.test.shp.version>
     <bundle.namespace>org.neo4j.gis</bundle.namespace>
-    <blueprints.version>1.1</blueprints.version>
-    <gremlin.version>1.4</gremlin.version>
-	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>    
+    <blueprints.version>1.2</blueprints.version>
+    <gremlin.version>1.5</gremlin.version>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
   <parent>
     <artifactId>parent-pom</artifactId>
     <groupId>org.neo4j.build</groupId>
-    <version>31</version>
+    <version>35</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>neo4j-spatial</artifactId>
   <groupId>org.neo4j</groupId>
-  <version>0.7-SNAPSHOT</version>
+  <version>0.9-SNAPSHOT</version>
   <name>Neo4j - Spatial Components</name>
   <description>Spatial utilities and components for Neo4j</description>
   <url>http://components.neo4j.org/${project.artifactId}/${project.version}</url>
@@ -33,6 +33,13 @@
   </scm>
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -264,7 +271,7 @@ terms of the relevant Commercial Agreement.
           <artifactId>picocontainer</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>        
+    </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-render</artifactId>
@@ -346,7 +353,16 @@ terms of the relevant Commercial Agreement.
           <groupId>org.neo4j</groupId>
           <artifactId>neo4j</artifactId>
         </exclusion>
+        <exclusion>
+          <artifactId>neo4j-ha</artifactId>
+          <groupId>org.neo4j</groupId>
+        </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>commons-lang</groupId>
+        <artifactId>commons-lang</artifactId>
+        <version>2.4</version>
     </dependency>
   </dependencies>
   <repositories>
@@ -354,6 +370,11 @@ terms of the relevant Commercial Agreement.
       <id>osgeo</id>
       <name>Open Source Geospatial Foundation Repository</name>
       <url>http://download.osgeo.org/webdav/geotools/</url>
+    </repository>
+    <repository>
+      <id>java.net</id>
+      <name>Java.net repo</name>
+      <url>https://maven.java.net/service/local/repositories/releases/content/</url>
     </repository>
     <repository>
       <snapshots>
@@ -462,10 +483,10 @@ terms of the relevant Commercial Agreement.
             <configuration>
               <jvmArgs>
                 <jvmArg>-Dcuke4duke.objectFactory=cuke4duke.internal.jvmclass.PicoFactory</jvmArg>
-                <jvmArg>-DNEO4J_VERSION=1.6</jvmArg>
+                <jvmArg>-DNEO4J_VERSION=1.7</jvmArg>
                 <jvmArg>-DNEO4J_HOME=neo4j_home</jvmArg>
                 <jvmArg>-DNEO4J_PRODUCT=community</jvmArg>
-                <jvmArg>-DDOWNLOAD_LOCATION=http://builder.neo4j.org/guestAuth/repository/download/bt65/.lastSuccessful/standalone/neo4j-community-1.6-unix.tar.gz</jvmArg>
+                <jvmArg>-DDOWNLOAD_LOCATION=http://builder.neo4j.org/guestAuth/repository/download/bt65/.lastSuccessful/standalone/neo4j-community-1.7-unix.tar.gz</jvmArg>
                 <jvmArg>-DDOWNLOAD_PLUGIN_LOCATION=${project.build.directory}/neo4j-spatial-${project.version}-server-plugin.zip</jvmArg>
               </jvmArgs>
               <cucumberArgs>
@@ -544,7 +565,7 @@ terms of the relevant Commercial Agreement.
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <!-- <version>2.7.1</version> -->
+        <version>2.11</version>
         <configuration>
           <argLine>-server -Xms512m -Xmx2500m -XX:+UseConcMarkSweepGC</argLine>
         </configuration>
@@ -554,8 +575,7 @@ terms of the relevant Commercial Agreement.
   <distributionManagement>
     <site>
       <id>neo4j-site</id>
-      <url>scpexe://components.neo4j.org/home/neo/components/${project.artifactId}/${project.version}</url>
+      <url>scpexe://static.neo4j.org/var/www/components.neo4j.org/${project.artifactId}/${project.version}</url>
     </site>
   </distributionManagement>
 </project>
-

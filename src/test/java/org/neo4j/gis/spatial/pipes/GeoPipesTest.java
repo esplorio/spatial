@@ -43,7 +43,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.neo4j.collections.rtree.filter.SearchAll;
 import org.neo4j.collections.rtree.filter.SearchFilter;
-import org.neo4j.cypher.javacompat.CypherParser;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.examples.AbstractJavaDocTestbase;
 import org.neo4j.gis.spatial.Constants;
@@ -136,6 +135,7 @@ public class GeoPipesTest extends AbstractJavaDocTestbase
      * 
      * @@s_filter_by_cql_using_bbox
      */
+    @Documented
     @Test
     public void filter_by_cql_using_bbox() throws CQLException
     {
@@ -146,6 +146,29 @@ public class GeoPipesTest extends AbstractJavaDocTestbase
         assertEquals(
                 1,
                 cqlFilter.count() );
+    }
+    
+    /**
+     * This pipe performs a search within a
+     * geometry in this example, both OSM street
+     * geometries should be found in when searching with
+     * an enclosing rectangle Envelope.
+     * 
+     * Example:
+     * 
+     * @@s_search_within_geometry
+     */
+    @Test
+    @Documented
+    public void search_within_geometry() throws CQLException
+    {
+        // START SNIPPET: s_search_within_geometry
+        GeoPipeline pipeline = GeoPipeline
+        .startWithinSearch(osmLayer, osmLayer.getGeometryFactory().toGeometry(new Envelope(10, 20, 50, 60)));
+        // END SNIPPET: s_search_within_geometry
+        assertEquals(
+                2,
+                pipeline.count() );
     }
 
     @Test
@@ -1134,7 +1157,6 @@ public class GeoPipesTest extends AbstractJavaDocTestbase
     public void setUp()
     {
         gen.get().setGraph( db );
-        parser = new CypherParser();
         engine = new ExecutionEngine( db );
         try
         {
@@ -1172,7 +1194,7 @@ public class GeoPipesTest extends AbstractJavaDocTestbase
     public void doc()
     {
        // gen.get().addSnippet( "graph", AsciidocHelper.createGraphViz( imgName , graphdb(), "graph"+getTitle() ) );
-       gen.get().addSourceSnippets( GeoPipesTest.class, "s_"+getTitle().toLowerCase() );
+       gen.get().addTestSourceSnippets( GeoPipesTest.class, "s_"+getTitle().toLowerCase() );
        gen.get().document( "target/docs", "examples" );
     }
 
@@ -1180,7 +1202,7 @@ public class GeoPipesTest extends AbstractJavaDocTestbase
     public static void init()
     {
         db = new ImpermanentGraphDatabase( );
-        db.cleanContent( true );
+        ((ImpermanentGraphDatabase)db).cleanContent( true );
         try
         {
             load();
