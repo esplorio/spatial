@@ -98,7 +98,7 @@ public class SpatialPlugin extends ServerPlugin {
 			@Description("The layer to add the node to.") @Parameter(name = "layer") String layer) {
 		SpatialDatabaseService spatialService = new SpatialDatabaseService(db);
 		System.out.println( "adding node " + node + " to layer '" + layer + "'");
-        
+
 		EditableLayer spatialLayer = (EditableLayer) spatialService.getLayer(layer);
 		Transaction tx = db.beginTx();
 		try {
@@ -173,7 +173,7 @@ public class SpatialPlugin extends ServerPlugin {
 		}
 
 		// TODO why a SearchWithin and not a SearchIntersectWindow?
-		
+
 		return GeoPipeline
 			.startWithinSearch(layer, layer.getGeometryFactory().toGeometry(new Envelope(minx, maxx, miny, maxy)))
 			.toNodeList();
@@ -194,7 +194,7 @@ public class SpatialPlugin extends ServerPlugin {
 		if (layer == null ) {
 		    layer = spatialService.getLayer(layerName);
 		}
-	
+
 		return GeoPipeline
 			.startNearestNeighborLatLonSearch(layer, new Coordinate(pointX, pointY), distanceInKm)
 			.sort("OrthodromicDistance").toNodeList();
