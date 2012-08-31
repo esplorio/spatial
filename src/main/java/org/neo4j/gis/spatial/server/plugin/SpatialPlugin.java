@@ -26,6 +26,7 @@ import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
 import org.neo4j.gis.spatial.SpatialDatabaseRecord;
 import org.neo4j.gis.spatial.SpatialDatabaseService;
+import org.neo4j.gis.spatial.SpatialDatabaseException;
 import org.neo4j.gis.spatial.pipes.GeoPipeline;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -214,6 +215,9 @@ public class SpatialPlugin extends ServerPlugin {
 		if (layer == null) {
 			layer = spatialService.getLayer(layerName);
 		}
+        if (layer == null) {
+            throw new SpatialDatabaseException("No such layer '" + layerName + "'!");
+        }
 
 		Geometry geometry = layer.getGeometryFactory().toGeometry(
 			new Envelope(new Coordinate(pointX, pointY)));
