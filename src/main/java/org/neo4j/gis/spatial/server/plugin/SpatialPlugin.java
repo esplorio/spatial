@@ -200,28 +200,28 @@ public class SpatialPlugin extends ServerPlugin {
 			.sort("OrthodromicDistance").toNodeList();
 	}
 
-        @PluginTarget(GraphDatabaseService.class)
-        @Description("search a layer for geometries containing a point.")
-        public Iterable<Node> findContainingGeometries(
-                        @Source GraphDatabaseService db,
-                        @Description("The x value of a point") @Parameter(name = "pointX") double pointX,
-                        @Description("The y value of a point") @Parameter(name = "pointY") double pointY,
-                        @Description("The layer to search. Can be a dynamic layer with pre-defined CQL filter.") @Parameter(name = "layer") String layerName) {
-                System.out.println("Finding Geometries in layer '" + layerName + "'");
-                SpatialDatabaseService spatialService = new SpatialDatabaseService(db);
+	@PluginTarget(GraphDatabaseService.class)
+	@Description("search a layer for geometries containing a point.")
+	public Iterable<Node> findContainingGeometries(
+			@Source GraphDatabaseService db,
+			@Description("The x value of a point") @Parameter(name = "pointX") double pointX,
+			@Description("The y value of a point") @Parameter(name = "pointY") double pointY,
+			@Description("The layer to search. Can be a dynamic layer with pre-defined CQL filter.") @Parameter(name = "layer") String layerName) {
+		System.out.println("Finding Geometries in layer '" + layerName + "'");
+		SpatialDatabaseService spatialService = new SpatialDatabaseService(db);
 
-                Layer layer = spatialService.getDynamicLayer(layerName);
-                if (null == layer) {
-                    layer = spatialService.getLayer(layerName);
-                }
+		Layer layer = spatialService.getDynamicLayer(layerName);
+		if (layer == null) {
+			layer = spatialService.getLayer(layerName);
+		}
 
-                Geometry geometry = layer.getGeometryFactory().toGeometry(
-                    new Envelope(new Coordinate(pointX, pointY)));
+		Geometry geometry = layer.getGeometryFactory().toGeometry(
+			new Envelope(new Coordinate(pointX, pointY)));
 
-                return GeoPipeline
-                    .startContainSearch(layer, geometry)
-                    .toNodeList();
-        }                                   
+		return GeoPipeline
+			.startContainSearch(layer, geometry)
+			.toNodeList();
+	}
 
 	private Iterable<Node> toArray(Node node) {
 		ArrayList<Node> result = new ArrayList<Node>();
