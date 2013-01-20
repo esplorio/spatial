@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.neo4j.cypher.internal.symbols.RelationshipType;
 import org.neo4j.gis.spatial.DynamicLayer;
 import org.neo4j.gis.spatial.EditableLayer;
 import org.neo4j.gis.spatial.Layer;
@@ -40,10 +39,9 @@ import org.neo4j.server.plugins.Parameter;
 import org.neo4j.server.plugins.PluginTarget;
 import org.neo4j.server.plugins.ServerPlugin;
 import org.neo4j.server.plugins.Source;
+import org.neo4j.server.rest.repr.ListRepresentation;
 import org.neo4j.server.rest.repr.MappingRepresentation;
 import org.neo4j.server.rest.repr.Representation;
-import org.neo4j.server.rest.repr.RepresentationType;
-
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.Envelope;
 import com.vividsolutions.jts.geom.Geometry;
@@ -241,10 +239,10 @@ public class SpatialPlugin extends ServerPlugin {
 		return result;
 	}
 
-	@PluginTarget(GraphDatabaseService.class)
+    @PluginTarget(GraphDatabaseService.class)
     @Description("search a layer for geometries containing a point, returning " +
-    		     "a compressed response rather than a full node.")
-	public Iterable<Representation> findContainingGeometriesCompressed(
+                 "a compressed response rather than a full node.")
+    public Representation findContainingGeometriesCompressed(
             @Source GraphDatabaseService db,
             @Description("The x value of a point") @Parameter(name = "pointX") double pointX,
             @Description("The y value of a point") @Parameter(name = "pointY") double pointY,
@@ -252,15 +250,15 @@ public class SpatialPlugin extends ServerPlugin {
                 @Parameter(name = "layer") String layerName,
             @Description("The fields to return from the Nodes")
                 @Parameter(name="fields") List<String> fields) {
-	    Iterable<Node> resultNodes = findContainingGeometries(db, pointX, pointY, layerName);
-	    List<Representation> reps = new ArrayList<Representation>();
-	    for (Node node : resultNodes) {
-	        Map<String, String> nodeMap = new HashMap<String, String>();
-	        for (String field : fields) {
-	           nodeMap.put(field, node.getProperty(field).toString());
-	        }
-	        reps.add(MappingRepresentation.stringMap(Representation.MAP, nodeMap));
-	    }
-	    return reps;
-	}
+        Iterable<Node> resultNodes = findContainingGeometries(db, pointX, pointY, layerName);
+        List<Representation> reps = new ArrayList<Representation>();
+        for (Node node : resultNodes) {
+            Map<String, String> nodeMap = new HashMap<String, String>();
+            for (String field : fields) {
+               nodeMap.put(field, node.getProperty(field).toString());
+            }
+            reps.add(MappingRepresentation.stringMap(Representation.STRING, nodeMap));
+        }
+        return new ListRepresentation(Representation.MAP, reps);
+    }
 }
